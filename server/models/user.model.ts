@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [8, "Password must be at least 8 characters"],
-    },
+    }, 
   },
   {
     timestamps: true,
@@ -42,8 +42,5 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword : string) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
 
-module.exports = mongoose.model('User', UserSchema)
+export const User = mongoose.model('User', UserSchema);

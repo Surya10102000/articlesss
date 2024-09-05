@@ -1,15 +1,17 @@
 import express, { Express, Request, Response } from "express";
-import cookieParser from 'cookie-parser' 
-import logger from 'morgan'
-import bodyParser from 'body-parser'
-import dotenv from 'dotenv'
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
 import { errorHandler } from "./middleware/ErrorHandler";
 import { connectDB } from "./config/db";
 
-dotenv.config()
+import authRouter from "./routes/blog.routes";
 
-connectDB()
-const app = express()
+dotenv.config();
+
+connectDB();
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,10 +20,15 @@ app.use(logger("dev"));
 
 // ROUTES
 
+app.get("/", (req, res) => {
+  res.status(201).json({
+    message: "Welcome to the API.",
+  });
+});
 
-// ERROR HANDLER MIDDLEWARE
-app.use(errorHandler)
+app.use("/auth", authRouter);
 
-app.listen(process.env.PORT,()=>{
-    console.log("Listening to port 3000")
-})
+
+app.listen(process.env.PORT, () => {
+  console.log("Listening to port 3000");
+});
