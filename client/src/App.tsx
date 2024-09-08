@@ -1,26 +1,27 @@
-import { Route, Routes } from 'react-router-dom'
-import Layout from './components/Layout'
-import Homepage from './pages/Homepage'
-import CreateBlog from './pages/CreateBlog'
-import EditBlog from './pages/EditBlog'
-import BlogDetails from './pages/BlogDetails'
-import NotFound from './pages/NotFound'
+import { Route, Routes } from "react-router-dom";
+
+import NotFound from "./pages/NotFound";
+import Homepage from "./pages/HomePage";
+import { useState } from "react";
+import AdminPage from "./pages/AdminPage";
+import Navbar from "./components/Navbar";
+import { useRecoilState } from "recoil";
+import { isAdminState } from "./recoil/atom";
+import EditBlogPage from "./pages/EditBlogPage";
 
 function App() {
-
+  const [isAdmin, setIsAdmin] = useRecoilState(isAdminState)
   return (
-    <>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Homepage />} />
-        <Route path="create" element={<CreateBlog />} />
-        <Route path="edit/:id" element={<EditBlog />} />
-        <Route path="blogs/:id" element={<BlogDetails />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
-    </>
-  )
+    <main className="p-2 max-w-2xl mx-auto">
+      <Navbar />
+      <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/create" element={<EditBlogPage />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/admin/:id" element={<AdminPage/>}/>
+      </Routes>
+    </main>
+  );
 }
 
-export default App
+export default App;
