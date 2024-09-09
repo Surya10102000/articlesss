@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { errorHandler } from "./middleware/ErrorHandler";
 import { connectDB } from "./config/db";
+import cors from 'cors'
 
 import authRouter from "./routes/userAuth.routes";
 
@@ -12,6 +13,8 @@ dotenv.config();
 
 connectDB();
 const app = express();
+
+app.use(cors())
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

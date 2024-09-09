@@ -16,11 +16,19 @@ router.post("/register", async (req: Request, res: Response) => {
     // Validate the request body using Zod schema
     const validatedData = userRegisterSchema.parse(req.body);
 
-    const userExists = await User.findOne({email : validatedData.email});
+    const emailExists = await User.findOne({email : validatedData.email});
 
-    if(userExists){
+    if(emailExists){
       return res.status(403).json({
         message: "Email id already registered",
+      })
+    }
+
+    const usernameExists = await User.findOne({ username : validatedData.username})
+
+    if(usernameExists){
+      return res.status(403).json({
+        message : "Username is taken"
       })
     }
 
@@ -31,7 +39,7 @@ router.post("/register", async (req: Request, res: Response) => {
       message: "User added successfully",
     });
   } catch (e: any) {
-    console.log(e);
+    console.log(e.message);
     res.status(500).json({
       error: e.message,
     });
@@ -62,7 +70,7 @@ router.post("/login", async (req, res) => {
 
     res.json({ token, message: "Login successful" });
   } catch (e: any) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: e.message});
   }
 });
 
