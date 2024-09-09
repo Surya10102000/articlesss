@@ -1,6 +1,23 @@
+@import './fonts/fonts.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: 'Nunito', sans-serif;
+}
+
+h1 {
+  font-family: 'PP Editorial New', serif;
+  font-weight: 700;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+
 @layer base {
   :root  {
     --background: 48 0% 95%;

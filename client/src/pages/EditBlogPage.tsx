@@ -1,10 +1,9 @@
 import "./styles.scss";
 
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import { extensions } from "../utils/tiptap";
 import { useEffect, useState } from "react";
 import Menubar from "@/components/Menubar";
-import { Button } from "@/components/ui/button";
 
 const EditBlogPage = () => {
   const [article, setArticle] = useState("");
@@ -35,7 +34,6 @@ const EditBlogPage = () => {
       EditBlogPage
       <Menubar editor={editor} />
       <EditorContent editor={editor} />
-      
     </div>
   );
 };

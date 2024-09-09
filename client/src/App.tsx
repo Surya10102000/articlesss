@@ -2,25 +2,30 @@ import { Route, Routes } from "react-router-dom";
 
 import NotFound from "./pages/NotFound";
 import Homepage from "./pages/HomePage";
-import { useState } from "react";
 import AdminPage from "./pages/AdminPage";
 import Navbar from "./components/Navbar";
-import { useRecoilState } from "recoil";
-import { isAdminState } from "./recoil/atom";
 import EditBlogPage from "./pages/EditBlogPage";
+import Register from "./pages/Auth/Registratoin";
+import LoginPage from "./pages/Auth/LoginPage";
+import ManageBlogsPage from "./pages/ManageBlogsPage";
+import { ProtectedRoute } from "./api/protectedRoute";
 
 function App() {
-  const [isAdmin, setIsAdmin] = useRecoilState(isAdminState)
   return (
-    <main className="p-2 max-w-2xl mx-auto">
+    <>
       <Navbar />
-      <Routes>
+      <main className="p-2 max-w-2xl mx-auto">
+        <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/create" element={<EditBlogPage />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/admin/:id" element={<AdminPage/>}/>
-      </Routes>
-    </main>
+          <Route path="/admin/:id" element={<AdminPage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/dashboard" element={<ProtectedRoute><ManageBlogsPage/></ProtectedRoute>}/>
+        </Routes>
+      </main>
+    </>
   );
 }
 

@@ -1,21 +1,23 @@
 import { atom } from 'recoil';
 
-export const blogsState = atom({
-  key: 'blogsState',
-  default: [],
+export const userState = atom ({
+  key : 'userState', 
+  default : null
+})
+
+// Global error state
+export const errorState = atom({
+  key: 'errorState',
+  default: '', // Empty string means no error initially
 });
 
-export const isAdminState = atom({
-  key : "isAdmin",
-  default : true
-})
+// Global loading state
+export const loadingState = atom({
+  key: 'loadingState',
+  default: false, // Default is not loading
+});
 
-export const editorState = atom({
-  key : "editor",
-  default : null,
-})
-
-export const editorContentState = atom ({
-  key: 'editoContentState',
-  default : ''
+export const userProfileState = atom({
+  key : "userProfileState",
+  default : null
 })

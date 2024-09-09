@@ -1,12 +1,12 @@
 import { Icons } from "./icons";
+import More from "./More";
+import SavPubButton from "./SavPubButton";
 import Tables from "./Tables";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 
 const Menubar = ({ editor }: any) => {
-  const handleSaveButton = () => {
-    console.log(editor?.getHTML())
-  };
+
 
   if (!editor) {
     return null;
@@ -14,7 +14,7 @@ const Menubar = ({ editor }: any) => {
 
   // const initialData = "INITIAL DATA";
   return (
-    <Card className="sticky top-5  z-10 rounded-md grid grid-cols-8">
+    <Card className="sticky bg-slate-100 top-5 z-10 rounded-md grid grid-cols-8 md:grid-cols-10">
       <Button
         variant="ghost"
         size="sm"
@@ -235,10 +235,9 @@ const Menubar = ({ editor }: any) => {
 
       <Tables editor={editor}/>
 
-      <div className="absolute right-0 bottom-0  ">
-        <Button size='sm' variant='secondary' onClick={handleSaveButton}>Save</Button>
-        <Button size='sm'>Publish</Button>
-      </div>
+      {/* <More editor={editor} /> */}
+      <SavPubButton editor={editor}/>
+
       
     </Card>
   );

@@ -8,7 +8,7 @@ import { Icons } from "../components/icons";
 
 const Tables = ({ editor }: any) => {
   return (
-    <DropdownMenu  >
+    <DropdownMenu >
         <DropdownMenuTrigger >
 
 
