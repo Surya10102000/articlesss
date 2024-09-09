@@ -157,7 +157,6 @@
   
       td,
       th {
-        border: 2px solid hsl(var(--border));
         box-sizing: border-box;
         min-width: 1em;
         padding: 3px 5px;
@@ -168,11 +167,16 @@
           margin-bottom: 0;
         }
       }
+
+      td{
+        border : none;
+      }
   
       th {
-        background-color: hsl(var(--card));
+        // background-color: hsl(var(--card));
         font-weight: bold;
         text-align: left;
+        border-bottom: 2px solid hsl(var(--border));
       }
   
       .selectedCell:after {
