@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { errorHandler } from "./middleware/ErrorHandler";
 import { connectDB } from "./config/db";
 
-import authRouter from "./routes/blog.routes";
+import authRouter from "./routes/userAuth.routes";
 
 dotenv.config();
 

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt, { Secret } from 'jsonwebtoken'
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
 
 // Extend the Request interface to include the 'decoded' property
 interface CustomRequest extends Request {
-    decoded?: string | object; // Adjust this type based on the structure of your decoded token
+    decoded?: string | JwtPayload; // Adjust this type based on the structure of your decoded token
   }
 
 export let checkToken = (req : CustomRequest,res : Response, next : NextFunction) => {
@@ -14,10 +14,10 @@ export let checkToken = (req : CustomRequest,res : Response, next : NextFunction
     }
 
     if (token) {
-        jwt.verify(token, process.env.SECRET as Secret, (err : any, decoded : any) => {
+        jwt.verify(token, process.env.JWT_SECRET as Secret, (err : any, decoded : any) => {
             if (err) {
                 return res.json({
-                    message: 'Token is not valid'
+                    message: err.message
                 });
             } else {
                 req.decoded= decoded;

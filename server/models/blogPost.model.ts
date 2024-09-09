@@ -23,6 +23,9 @@ const BlogPostSchema = new mongoose.Schema(
     image:{
       type : String
     },
+    likes : {
+      type : Number
+    },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

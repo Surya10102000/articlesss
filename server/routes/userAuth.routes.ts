@@ -16,6 +16,14 @@ router.post("/register", async (req: Request, res: Response) => {
     // Validate the request body using Zod schema
     const validatedData = userRegisterSchema.parse(req.body);
 
+    const userExists = await User.findOne({email : validatedData.email});
+
+    if(userExists){
+      return res.status(403).json({
+        message: "Email id already registered",
+      })
+    }
+
     const user = new User(validatedData);
 
     const result = user.save();
@@ -58,33 +66,27 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/user/:uid", checkToken, (req, res) => {
-  User.findOne({ _id: req.params.uid }, function (err : any, user : {
-    _id : string;
-    email : string ;
-    created_At : Date;
-  }) {
-    if (err) {
-      console.log(err);
-      return res.status(401).json({
+router.get("/user/:uid", checkToken, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.uid }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
         message: "User does not exist.",
       });
     }
-    if (user) {
-      console.log("logged in");
-      return res.status(200).json({
-        message: "user found",
-        uid : user._id,
-        email: user.email,
-        joined: user.created_At,
-      });
-    }
-  }).catch((err) => {
-    console.log(err);
-    res.status(500).json({
-      error: err,
+
+    console.log("User found and logged in");
+
+    return res.status(200).json(user);
+
+  } catch (err : any) {
+    console.error(err);
+    return res.status(500).json({
+      error: err.message,
     });
-  });
+  }
 });
+
 
 export default router;
