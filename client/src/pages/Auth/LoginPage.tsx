@@ -8,14 +8,14 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  });
+  }); 
 
   const [error, setError] = useRecoilState(errorState); // Global error state
   const [isLoading, setLoading] = useRecoilState(loadingState); // Global loading state
 
   // Handle input changes
   const handleChange = (e : React.FormEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name ]: e.target.value });
   };
 
   // Handle form submission
@@ -40,13 +40,14 @@ const LoginPage = () => {
         setLoading(false); // Stop loading on success
         localStorage.setItem('token', data.token); // Save JWT token to local storage
         
-        navigate('/dashboard'); // Redirect to dashboard or any protected route
+        navigate('/'); // Redirect to dashboard or any protected route
       } else {
         setLoading(false); // Stop loading on failure
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
       setLoading(false); // Stop loading on error
+      console.log(err)
       setError(err.response.data.message);
     }
   };

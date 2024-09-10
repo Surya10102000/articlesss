@@ -10,6 +10,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 import ManageBlogsPage from "./pages/ManageBlogsPage";
 import { ProtectedRoute } from "./api/protectedRoute";
 
+
 function App() {
   return (
     <>
@@ -17,9 +18,9 @@ function App() {
       <main className="p-2 max-w-2xl mx-auto">
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/create" element={<EditBlogPage />} />
+          <Route path="/create" element={<ProtectedRoute><EditBlogPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/admin/:id" element={<AdminPage />} />
+          <Route path="/admin/:id" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/dashboard" element={<ProtectedRoute><ManageBlogsPage/></ProtectedRoute>}/>
