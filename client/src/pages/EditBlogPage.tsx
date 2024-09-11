@@ -2,11 +2,11 @@ import "./styles.scss";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import { extensions } from "../utils/tiptap";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Menubar from "@/components/Menubar";
 
 const EditBlogPage = () => {
-  const [article, setArticle] = useState("");
+  // const [article, setArticle] = useState("");
 
   const editor = useEditor({
     extensions,

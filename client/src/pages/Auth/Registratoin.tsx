@@ -15,7 +15,8 @@ const Register = () => {
   const [isLoading, setLoading] = useRecoilState(loadingState)
 
   const handleChange = (e : React.FormEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value});
+    const { name , value } = e.target as HTMLInputElement
+    setFormData({ ...formData, [name]: value});
   };
 
   const handleSubmit = async (e : FormEvent) => {
@@ -29,17 +30,19 @@ const Register = () => {
         password: formData.password,
         username : formData.username
       });
+      console.log(response)
 
-      if (response.ok) {
+      if (response) {
         setLoading(false)
         // Successful registration, redirect to login page
         navigate("/login");
       } else {
         // Handle server-side validation errors
         setLoading(false)
-        setError(data.message || "Something went wrong");
+        setError("Something went wrong");
       }
-    } catch (err) {
+    } catch (err : any) {
+      console.log(err)
       setError(err.response.data.message);
     }
   };
@@ -74,7 +77,7 @@ const Register = () => {
           required
         />
         
-        <button type="submit">Register</button>
+        <button type="submit">{isLoading ? "loading" : "Register"}</button>
       </form>
     </div>
   );

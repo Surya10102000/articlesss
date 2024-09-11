@@ -1,5 +1,4 @@
 import { Icons } from "./icons";
-import More from "./More";
 import SavPubButton from "./SavPubButton";
 import Tables from "./Tables";
 import { Button } from "./ui/button";

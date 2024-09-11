@@ -17,3 +17,8 @@ export const loadingState = atom({
   default: false, // Default is not loading
 });
 
+export const userAuthState = atom({
+  key: "userAuthState",
+  default : null,
+})
+
