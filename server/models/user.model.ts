@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { Document } from "mongoose";
+
+export interface UserI extends Document{
+    _id : string
+    username : string,
+    email : string ,
+    password : string ,
+    role : string 
+}
+
 
 const UserSchema = new mongoose.Schema(
   {
