@@ -6,11 +6,12 @@ export const signup = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
   let user;
   user = await User.findOne({ email });
-
+  
   if(user) {
     return res.status(403).json({ message: "Email already exists" });
   }
-
+  console.log("1")
+  
   user = await User.findOne({ username });
 
   if (user) {
@@ -18,15 +19,18 @@ export const signup = async (req: Request, res: Response) => {
   }
 
   user = await User.create({ email, username, password });
-
-  //   res.status(200).json({ user })
+  
+    // res.status(200).json({ user })
   req.login(user, (err) => {
     if (err) throw err;
     res.status(201).json({
       user,
+      redirect : "/login"
     });
   });
 };
+
+
 export const login = async (
   req: Request,
   res: Response,
@@ -41,6 +45,7 @@ export const login = async (
       if (err) throw err;
       res.status(201).json({
         user,
+        redirect : "/"
       });
     });
   })(req, res, next);
