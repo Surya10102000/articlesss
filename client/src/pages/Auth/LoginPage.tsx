@@ -1,93 +1,119 @@
-import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { errorState, loadingState } from "../../recoil/atom";
+import React, { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userState } from "@/recoil/atom";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import LoadingIcon from "@/components/Loading";
 
-const LoginPage = () => {
+// Define form input types
+interface ILoginInput {
+  email: string;
+  password: string;
+}
+
+const LoginForm: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILoginInput>();
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const setUser = useSetRecoilState(userState);
 
-  const [error, setError] = useRecoilState(errorState); // Global error state
-  const [isLoading, setLoading] = useRecoilState(loadingState); // Global loading state
-  // const [userAuth, setUserAuth] = useRecoilState(userAuthState);
-
-  // Handle input changes
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = e.target as HTMLInputElement; // Explicitly cast e.target as an HTMLInputElement
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    setLoading(true); // Start loading
-    setError(""); // Clear any previous error
-
+  const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      setLoading(true);
+      setServerError("");
+      setSuccessMessage("");
 
-      const data = await response.json();
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login", // Replace with your API endpoint
+        data,
+        { withCredentials: true } // This is required for cookie-based sessions
+      );
+      setLoading(false);
 
-      if (response.ok) {
-        setLoading(false); // Stop loading on success
-        localStorage.setItem("token", data.token); // Save JWT token to local storage
-
-        setUserAuth(data.user)
-
-        navigate("/"); // Redirect to dashboard or any protected route
-      } else {
-        setLoading(false); // Stop loading on failure
-        setError(data.message || "Invalid credentials");
+      if (response.status === 201) {
+        setSuccessMessage("Login successful!");
+        setUser(response.data.user);
+        // Navigate to profile page after successful login
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
-    } catch (err : any) {
-      setLoading(false); // Stop loading on error
-      console.log(err);
-      setError(err.response.data.message);
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        setServerError(error.response.data.message);
+      } else {
+        // Something else went wrong
+        setServerError("Something went wrong. Please try again.");
+      }
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      {/* Show error message */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
+    <div className="p-2">
+      <div className="max-w-md lg:max-w-lg my-20">
+        <h2 className="font-extrabold tracking-tight text-4xl md:text-5xl lg:text-6xl">Login</h2>
+        <p className="text-2xl lg:text-3xl">
+          Access your dashboard, manage your content, and stay connected.
+        </p>
+      </div>
+      <form className="space-y-2 my-24" onSubmit={handleSubmit(onSubmit)}>
+        <div className="space-y-2">
+          <label className="text-lg">Email</label>
+          <Input className="text-lg py-5"
             type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-            required
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                message: "Invalid email address",
+              },
+            })}
           />
+          {errors.email && (
+            <p className="text-red-700">{errors.email.message}</p>
+          )}
         </div>
-        <div>
-          <label>Password:</label>
-          <input
+
+        <div className="space-y-2">
+          <label className="text-lg">Password</label>
+          <Input className="text-lg py-5"
             type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            required
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            })}
           />
+          {errors.password && (
+            <p className="text-red-700">{errors.password.message}</p>
+          )}
         </div>
-        <button type="submit">{isLoading ? "Loading" : "Login"}</button>
+        <Button className="bg-black" type="submit" disabled={loading}>
+          {loading ? <div className="flex"><LoadingIcon/><span>loading</span></div> : "Login"}
+        </Button>
+
+        {serverError && <p className="text-red-700">{serverError}</p>}
+        {successMessage && <p className="text-green-800">{successMessage}</p>}
+
+        <p className="text-lg">
+          New here? <Link className="underline ml-1 hover:text-yellow-500" to="/register">Signup</Link>
+        </p>
       </form>
     </div>
   );
 };
 
-export default LoginPage;
+export default LoginForm;
