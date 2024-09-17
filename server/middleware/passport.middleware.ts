@@ -5,25 +5,28 @@ import { User } from "../models/user.model";
 import { Request } from "express";
 
 passport.use(
-  new LocalStrategy({
-    usernameField : "email",
-    passwordField : "password"
-  },async (email, password, done) => {
-    const user = await User.findOne({ email });
-    try {
-      if (!user) {
-        return done(null, false);
-      }
-      //@ts-ignore
-      const isMatch = await bcrypt.compare(password, user.password);
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    async (email, password, done) => {
+      const user = await User.findOne({ email });
+      try {
+        if (!user) {
+          return done(null, false);
+        }
+        //@ts-ignore
+        const isMatch = await bcrypt.compare(password, user.password);
 
-      if (isMatch) {
-        return done(null, user);
-      } else return done(null, false);
-    } catch (error) {
-      return done(error);
+        if (isMatch) {
+          return done(null, user);
+        } else return done(null, false);
+      } catch (error) {
+        return done(error);
+      }
     }
-  })
+  )
 );
 
 passport.serializeUser((user: any, done) => {
@@ -33,10 +36,17 @@ passport.serializeUser((user: any, done) => {
 passport.deserializeUser(async (req: Request, id: string, done: any) => {
   try {
     const user = await User.findById(id);
+
+    if (user === null) {
+      done(null, false);
+    } else {
+      user.password = ""
+      done(null, user);
+    }
     done(null, user);
   } catch (error) {
     done(error);
   }
 });
 
-export default passport
+export default passport;

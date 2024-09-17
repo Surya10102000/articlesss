@@ -29,12 +29,17 @@ app.use(logger("dev"));
 
 app.use(
   session({
-    secret: "envsecret",
+    secret:  process.env.SESSION_SECRET as string,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
+      collectionName : "sessions"
     }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+    },
   })
 );
 

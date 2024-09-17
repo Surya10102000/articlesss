@@ -6,12 +6,11 @@ export const signup = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
   let user;
   user = await User.findOne({ email });
-  
-  if(user) {
+
+  if (user) {
     return res.status(403).json({ message: "Email already exists" });
   }
-  console.log("1")
-  
+
   user = await User.findOne({ username });
 
   if (user) {
@@ -19,17 +18,17 @@ export const signup = async (req: Request, res: Response) => {
   }
 
   user = await User.create({ email, username, password });
-  
-    // res.status(200).json({ user })
+  user.password = "";
+
+  // res.status(200).json({ user })
   req.login(user, (err) => {
     if (err) throw err;
     res.status(201).json({
       user,
-      redirect : "/login"
+      redirect: "/login",
     });
   });
 };
-
 
 export const login = async (
   req: Request,
@@ -45,26 +44,47 @@ export const login = async (
       if (err) throw err;
       res.status(201).json({
         user,
-        redirect : "/"
+        redirect: "/",
       });
     });
   })(req, res, next);
 };
 
-export const logout = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.logOut;
-  
-  req.session.destroy((err)=>{
-      res.clearCookie("connect.sid")
-      res.status(204).send("logged out")
-  })
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user) {
+		req.session.destroy(err=>{
+      next(err)
+    })
+		res.clearCookie('connect.sid') // clean up!
+		return res.json({ msg: 'logging you out' })
+	} else {
+		return res.json({ msg: 'no user to log out!' })
+	}
+
+  // if (req.session) {
+  //   req.logout((err) => {
+  //     if (err) {
+  //       return next(err); // Handle any error that occurs during logout
+  //     }
+
+  //     // Destroy the session after logout
+  //     req.session.destroy((err) => {
+  //       if (err) {
+  //         return next(err); // Handle any error during session destruction
+  //       } 
+
+  //       // Clear the session cookie and send response
+  //       res.clearCookie("connect.sid", { path: "/" });
+  //       return res.status(204).json({ message: "logged out", redirect: "/" });
+  //     });
+  //   });
+  // } else {
+  //   return res.status(400).json({ message: "No session found" });
+  // }
 };
 
-export const me = async (req: Request, res: Response , next : NextFunction) => {
-    if(req.isAuthenticated()) res.status(200).json({user : req.user})
-        else res.status(401).json({user : null})
+export const me = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json({ user: req.user });
+  } else res.status(401).json({ user: null });
 };
