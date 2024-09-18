@@ -1,24 +1,7 @@
 import { atom } from 'recoil';
 
-export const userState = atom ({
-  key : 'userState', 
-  default : null
-})
 
-// Global error state
-export const errorState = atom({
-  key: 'errorState',
-  default: '', // Empty string means no error initially
+export const userState = atom({
+  key: 'userState', // unique ID (with respect to other atoms/selectors)
+  default: null,    // default value (initial user state)
 });
-
-// Global loading state
-export const loadingState = atom({
-  key: 'loadingState',
-  default: false, // Default is not loading
-});
-
-export const userAuthState = atom({
-  key: "userAuthState",
-  default : null,
-})
-

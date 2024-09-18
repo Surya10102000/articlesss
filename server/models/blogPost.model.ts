@@ -6,19 +6,15 @@ const BlogPostSchema = new mongoose.Schema(
       type: String,
       required: [true, "Blog title is required"],
       trim: true,
-      maxlength: [100, "Title cannot exceed 300 characters"],
     },
     summary : {
         type : String, 
-        required : [true, "Blog summaey is required"],
+        required : [true, "Blog summary is required"],
         trim: true,
-        minlength : [30, "Blog Summary must be at least 30 characters"],
-        maxlength : [100, "Blog Summary cannot exceed 100 characters"]
     },
     content: {
-      type: String,
-      required: [true, "Blog content is required"],
-      minlength: [300, "Content must be at least 300 characters"],
+      type: String ,
+      required : true,
     },
     image:{
       type : String
@@ -31,6 +27,11 @@ const BlogPostSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Author is required"],
     },
+    published : {
+      type : Boolean, 
+      require : true,
+      default : false,
+    }
   },
   {
     timestamps: true,
