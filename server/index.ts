@@ -7,6 +7,7 @@ import cors from "cors";
 import session from "express-session";
 
 import authRoutes from "./routes/auth.routes";
+import blogRoutes from "./routes/blog.routes"
 import passport from "./middleware/passport.middleware";
 import MongoStore from "connect-mongo";
 dotenv.config();
@@ -46,12 +47,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/api/demo", (req, res) => {
-  res.json({ sessionId: req.sessionID });
-  console.log(req.isAuthenticated(), req.user);
-});
 
 app.use("/api/auth", authRoutes);
+app.use("/api/blogs",blogRoutes)
 
 app.listen(PORT, () => {
   console.log("Listening to port 3000");

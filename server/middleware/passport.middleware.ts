@@ -30,7 +30,7 @@ passport.use(
 );
 
 passport.serializeUser((user: any, done) => {
-  done(null, user._id);
+  return done(null, user._id);
 });
 
 passport.deserializeUser(async (req: Request, id: string, done: any) => {
@@ -38,14 +38,13 @@ passport.deserializeUser(async (req: Request, id: string, done: any) => {
     const user = await User.findById(id);
 
     if (user === null) {
-      done(null, false);
+      return done(null, false);
     } else {
       user.password = ""
-      done(null, user);
+      return done(null, user);
     }
-    done(null, user);
   } catch (error) {
-    done(error);
+    return done(error);
   }
 });
 
